@@ -12,6 +12,12 @@ It is based on research from:
 - https://github.com/mikehailodev/frigate-hass-addons-h10
 - https://github.com/mikehailodev/hailo-vlm-addon
 
+## Credits
+
+This standalone project builds on community work by [mikehailodev/frigate-hass-addons-h10](https://github.com/mikehailodev/frigate-hass-addons-h10), [mikehailodev/hailo-vlm-addon](https://github.com/mikehailodev/hailo-vlm-addon), and the upstream [Frigate](https://github.com/blakeblackshear/frigate) project.
+
+See [LICENSES.md](LICENSES.md) for attribution and licensing notes.
+
 ## Target Architecture
 
 ```text
