@@ -1,0 +1,30 @@
+.env
+readmemarcus.md
+*.log
+
+# Runtime data
+config/frigate/config.yml
+config/frigate/go2rtc_homekit.yml
+config/vlm/options.json
+media/frigate/*
+!media/frigate/.gitkeep
+cache/frigate/*
+!cache/frigate/.gitkeep
+config/frigate/frigate.db*
+config/frigate/backup.db
+config/frigate/.exports
+config/frigate/.jwt_secret
+config/frigate/.search_stats.json
+config/frigate/.timeline
+config/frigate/.vacuum
+config/frigate/model_cache/
+
+# Local model and binary packages can be large/licensed.
+models/frigate/*
+!models/frigate/.gitkeep
+models/vlm/*
+!models/vlm/.gitkeep
+services/frigate-h10/packages/*
+!services/frigate-h10/packages/.gitkeep
+services/hailo-vlm/packages/*
+!services/hailo-vlm/packages/.gitkeep

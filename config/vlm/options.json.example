@@ -1,0 +1,7 @@
+{
+  "camera_source": "rtsp://<user>:<password>@<camera-ip>:554/<stream>",
+  "max_tokens": 200,
+  "temperature": 0.1,
+  "default_prompt": "Describe the image",
+  "system_prompt": "You are a helpful assistant that analyzes images and answers questions about them."
+}

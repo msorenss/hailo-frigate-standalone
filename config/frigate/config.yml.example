@@ -1,0 +1,69 @@
+mqtt:
+  enabled: true
+  host: <mqtt-host-or-home-assistant-ip>
+  port: 1883
+  user: <mqtt-user>
+  password: <mqtt-password>
+
+detectors:
+  hailo8l:
+    type: hailo8l
+    device: PCIe
+
+model:
+  width: 640
+  height: 640
+  input_tensor: nhwc
+  input_pixel_format: rgb
+  input_dtype: int
+  model_type: yolo-generic
+  labelmap_path: /labelmap/coco-80.txt
+  path: https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v5.3.0/hailo10h/yolov8m.hef
+
+cameras:
+  camera_1:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: "{FRIGATE_CAMERA_RTSP_URL}"
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+
+objects:
+  track:
+    - person
+    - car
+
+record:
+  enabled: true
+  detections:
+    pre_capture: 5
+    post_capture: 5
+    retain:
+      days: 1
+      mode: active_objects
+
+snapshots:
+  enabled: true
+  timestamp: true
+  bounding_box: true
+  crop: false
+  retain:
+    default: 1
+    objects:
+      person: 1
+      car: 1
+
+logger:
+  default: info
+  logs:
+    frigate.object_detection: debug
+    frigate.detectors.plugins.hailo8l: debug
+
+version: 0.17-0

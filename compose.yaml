@@ -1,0 +1,86 @@
+name: hailo-frigate
+
+services:
+  frigate-h10:
+    image: hailo-frigate-h10:local
+    build:
+      context: ./services/frigate-h10
+      args:
+        FRIGATE_IMAGE: ${FRIGATE_IMAGE:-ghcr.io/blakeblackshear/frigate:0.17.0}
+        HAILORT_VERSION: ${HAILORT_VERSION:-5.3.0}
+        HAILORT_DEB: ${HAILORT_DEB:-hailort_5.3.0_arm64.deb}
+        HAILORT_WHEEL: ${FRIGATE_HAILORT_WHEEL:-hailort-5.3.0-cp311-cp311-linux_aarch64.whl}
+    container_name: frigate-h10
+    restart: unless-stopped
+    shm_size: ${FRIGATE_SHM_SIZE:-256mb}
+    stop_grace_period: 30s
+    devices:
+      - ${HAILO_DEVICE:-/dev/h1x-0}:${HAILO_DEVICE:-/dev/h1x-0}
+      - ${HAILO_DEVICE:-/dev/h1x-0}:/dev/hailo0
+      # For USB cameras, add a host-specific device mapping here, for example:
+      # - /dev/video0:/dev/video0
+      # If your host exposes /dev/hailo_control, add it here as well:
+      # - /dev/hailo_control:/dev/hailo_control
+    cap_add:
+      - SYS_RAWIO
+      - PERFMON
+    group_add:
+      - ${VIDEO_GROUP_ID:-44}
+      - ${RENDER_GROUP_ID:-109}
+    volumes:
+      - ./config/frigate:/config:rw
+      - ./media/frigate:/media/frigate:rw
+      - ./cache/frigate:/tmp/cache:rw
+      - ./models/frigate:/models:rw
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "${FRIGATE_WEB_PORT:-5000}:5000"
+      - "${FRIGATE_AUTH_PORT:-8971}:8971"
+      - "${FRIGATE_RTSP_PORT:-8554}:8554"
+      - "${FRIGATE_WEBRTC_TCP_PORT:-8555}:8555/tcp"
+      - "${FRIGATE_WEBRTC_UDP_PORT:-8555}:8555/udp"
+      - "${GO2RTC_API_PORT:-1984}:1984"
+    environment:
+      TZ: ${TZ:-Europe/Stockholm}
+      FRIGATE_CAMERA_RTSP_URL: ${FRIGATE_CAMERA_RTSP_URL:-}
+    networks:
+      - edge-ai
+
+  hailo-vlm:
+    image: hailo-vlm-chat:local
+    build:
+      context: ./services/hailo-vlm
+      args:
+        VLM_REPO: ${VLM_REPO:-https://github.com/mikehailodev/hailo-vlm-addon.git}
+        VLM_REF: ${VLM_REF:-main}
+        HAILORT_VERSION: ${HAILORT_VERSION:-5.3.0}
+        HAILORT_DEB: ${HAILORT_DEB:-hailort_5.3.0_arm64.deb}
+        HAILORT_WHEEL: ${VLM_HAILORT_WHEEL:-hailort-5.3.0-cp313-cp313-linux_aarch64.whl}
+    container_name: hailo-vlm
+    restart: unless-stopped
+    devices:
+      - ${HAILO_DEVICE:-/dev/h1x-0}:${HAILO_DEVICE:-/dev/h1x-0}
+      - ${HAILO_DEVICE:-/dev/h1x-0}:/dev/hailo0
+      # For USB camera input, add a host-specific device mapping here, for example:
+      # - /dev/video0:/dev/video0
+      # If your host exposes /dev/hailo_control, add it here as well:
+      # - /dev/hailo_control:/dev/hailo_control
+    cap_add:
+      - SYS_RAWIO
+    group_add:
+      - ${VIDEO_GROUP_ID:-44}
+      - ${RENDER_GROUP_ID:-109}
+    volumes:
+      - ./config/vlm/options.json:/data/options.json:ro
+      - ./models/vlm:/media:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "${VLM_PORT:-8099}:8099"
+    environment:
+      TZ: ${TZ:-Europe/Stockholm}
+    networks:
+      - edge-ai
+
+networks:
+  edge-ai:
+    driver: bridge
