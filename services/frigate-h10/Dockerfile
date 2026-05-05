@@ -1,7 +1,7 @@
 # Standalone Frigate image with Hailo-10H support.
 # Based on the community Home Assistant add-on work from:
 # https://github.com/mikehailodev/frigate-hass-addons-h10
-ARG FRIGATE_IMAGE=ghcr.io/blakeblackshear/frigate:0.17.0
+ARG FRIGATE_IMAGE=ghcr.io/blakeblackshear/frigate:0.17.1
 FROM ${FRIGATE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,5 +32,5 @@ COPY hailo10h_patch.py /tmp/hailo10h_patch.py
 RUN python3 /tmp/hailo10h_patch.py && rm /tmp/hailo10h_patch.py
 
 LABEL org.opencontainers.image.title="Standalone Frigate Hailo-10H" \
-    org.opencontainers.image.description="Frigate 0.17.0 with HailoRT 5.3.0 and Hailo-10H detector patch" \
+    org.opencontainers.image.description="Frigate 0.17.1 with HailoRT 5.3.0 and Hailo-10H detector patch" \
       org.opencontainers.image.source="https://github.com/mikehailodev/frigate-hass-addons-h10"

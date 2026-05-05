@@ -1,6 +1,6 @@
 # Frigate Hailo-10H Service
 
-The Frigate service builds from [services/frigate-h10/Dockerfile](../services/frigate-h10/Dockerfile). It starts from `ghcr.io/blakeblackshear/frigate:0.17.0`, replaces the bundled HailoRT runtime with HailoRT 5.3.0, and applies [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py).
+The Frigate service builds from [services/frigate-h10/Dockerfile](../services/frigate-h10/Dockerfile). It starts from `ghcr.io/blakeblackshear/frigate:0.17.1`, replaces the bundled HailoRT runtime with HailoRT 5.3.0, and applies [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py).
 
 ## Detector Configuration
 

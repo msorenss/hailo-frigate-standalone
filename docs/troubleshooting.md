@@ -73,7 +73,7 @@ sudo docker compose --env-file .env -f compose.yaml up -d --force-recreate friga
 
 ## Frigate Patch Fails During Build
 
-The patch is written against Frigate 0.17.0. If you change `FRIGATE_IMAGE`, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
+The patch has been re-tested against Frigate 0.17.1. If you change `FRIGATE_IMAGE` again, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
 
 ## VLM Build Cannot Clone Upstream
 

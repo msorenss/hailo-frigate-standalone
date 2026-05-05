@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.17.0 with the community Hailo-10H detector patch.
+- Frigate 0.17.1 with the community Hailo-10H detector patch.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -34,8 +34,8 @@ This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian
 
 Verified locally:
 
-- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.17.0`.
-- Frigate reports `0.17.0-f0d69f7` on `/api/version`.
+- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.17.1`.
+- Frigate reports `0.17.1-416a9b7` on `/api/version`.
 - Frigate sees the Hailo-10H with `hailortcli fw-control identify`.
 - VLM starts on port `8099` and reports `hailo_available=true` and `hailo_device=true`.
 
