@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.17.1 with the community Hailo-10H detector patch.
+- Frigate 0.17.1 with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -151,18 +151,24 @@ curl http://127.0.0.1:5000/api/version
 sudo docker compose --env-file .env -f compose.yaml ps frigate-h10
 ```
 
-## Hailo-10H Frigate Details
+## Hailo Frigate Details
 
-The Frigate detector type remains `hailo8l` by design:
+Use `hailo10h` on Hailo-10H hardware:
 
 ```yaml
 detectors:
-   hailo8l:
-      type: hailo8l
+   hailo10h:
+      type: hailo10h
       device: PCIe
 ```
 
-The patched plugin auto-detects `HAILO10H`, selects Hailo-10H-compatible defaults, and sets the shared VDevice group so Frigate and VLM can use the accelerator at the same time.
+The image now keeps the upstream `hailo8l` detector for Hailo-8L systems and generates a separate `hailo10h` detector plugin for Hailo-10H systems during the Docker build.
+
+The patch does three concrete things:
+
+- It preserves the upstream `hailo8l` detector type instead of overloading it for Hailo-10H.
+- It generates a sibling `hailo10h` detector plugin that registers as its own Frigate detector type.
+- It sets `params.group_id = "SHARED"` in both Hailo detector plugins so Frigate and VLM can use the accelerator at the same time.
 
 The Frigate image also removes the old `/usr/local/bin/hailortcli` from the upstream base image and links it to the HailoRT 5.3.0 CLI installed from the local `.deb`. Verify with:
 
@@ -188,7 +194,7 @@ They are not committed here. Copy the `.deb` into both service package folders, 
 
 - [compose.yaml](compose.yaml) - Docker Compose deployment for both services.
 - [services/frigate-h10/Dockerfile](services/frigate-h10/Dockerfile) - Frigate image with HailoRT 5.3.0 package replacement.
-- [services/frigate-h10/hailo10h_patch.py](services/frigate-h10/hailo10h_patch.py) - Hailo-10H detector patch and shared VDevice group.
+- [services/frigate-h10/hailo10h_patch.py](services/frigate-h10/hailo10h_patch.py) - Build-time patch script that preserves `hailo8l`, creates `hailo10h`, and enables shared Hailo access.
 - [services/hailo-vlm/Dockerfile](services/hailo-vlm/Dockerfile) - VLM image that pulls the upstream app files at build time.
 - [config/frigate/config.yml.example](config/frigate/config.yml.example) - Frigate config template.
 - [config/vlm/options.json.example](config/vlm/options.json.example) - VLM options template.
