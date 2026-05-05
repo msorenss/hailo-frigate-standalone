@@ -1,5 +1,6 @@
 .env
 readmemarcus.md
+.vscode/
 *.log
 
 # Runtime data
