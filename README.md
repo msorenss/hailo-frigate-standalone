@@ -26,7 +26,7 @@ Cameras -> Raspberry Pi 5 + Hailo-10H
              |-- Hailo VLM Chat container -> http://<pi>:8099
 ```
 
-The Frigate detector type remains `hailo8l`. That is intentional: the patched Frigate plugin auto-detects Hailo-10H hardware while keeping the existing Frigate config key.
+The image now exposes both `hailo8l` and `hailo10h` detector types. Use `hailo10h` on Hailo-10H hardware and keep `hailo8l` for Hailo-8L systems.
 
 ## Current Tested State
 

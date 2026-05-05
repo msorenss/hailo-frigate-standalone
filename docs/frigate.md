@@ -6,16 +6,16 @@ The Frigate service builds from [services/frigate-h10/Dockerfile](../services/fr
 
 Copy [config/frigate/config.yml.example](../config/frigate/config.yml.example) to `config/frigate/config.yml` and adjust it for your camera. The camera template reads its RTSP URL from `FRIGATE_CAMERA_RTSP_URL` in `.env`. Keep `.env` local because it contains camera credentials.
 
-Keep the detector key and type as `hailo8l`:
+Use `hailo10h` on Hailo-10H hardware. The image also preserves the upstream `hailo8l` detector for Hailo-8L hardware:
 
 ```yaml
 detectors:
-  hailo8l:
-    type: hailo8l
+  hailo10h:
+    type: hailo10h
     device: PCIe
 ```
 
-The patch changes the plugin internals so Hailo-10H is auto-detected from `hailortcli` output.
+The build now creates a separate `hailo10h` plugin alongside the upstream `hailo8l` plugin. That keeps both detector types available instead of overloading `hailo8l` for two different device families.
 
 ## Model Configuration
 
@@ -62,4 +62,8 @@ Defaults from [compose.yaml](../compose.yaml):
 
 ## Shared Hailo Device
 
-The patch sets `params.group_id = "SHARED"` in the Frigate detector plugin. This is required so Frigate and the VLM container can both use the Hailo-10H device concurrently.
+The build sets `params.group_id = "SHARED"` in both Hailo detector plugins. This is required so Frigate and the VLM container can both use the Hailo device concurrently.
+
+## Implementation Notes
+
+This split is a relatively small maintenance surface because Frigate auto-discovers detector plugins from the plugin directory and registers them by `type_key`. The standalone image uses that behavior to generate a `hailo10h.py` sibling plugin during build time while leaving the upstream `hailo8l.py` implementation largely intact.

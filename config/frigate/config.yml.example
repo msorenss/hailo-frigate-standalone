@@ -6,8 +6,8 @@ mqtt:
   password: <mqtt-password>
 
 detectors:
-  hailo8l:
-    type: hailo8l
+  hailo10h:
+    type: hailo10h
     device: PCIe
 
 model:
@@ -64,6 +64,6 @@ logger:
   default: info
   logs:
     frigate.object_detection: debug
-    frigate.detectors.plugins.hailo8l: debug
+    frigate.detectors.plugins.hailo10h: debug
 
 version: 0.17-0
