@@ -41,6 +41,22 @@ Verified locally:
 
 The VLM service still needs a real camera source and a VLM HEF model before it can do useful image-language inference.
 
+## Docker Hub Image
+
+A prebuilt Frigate image from this repo is published on Docker Hub:
+
+- Repository: `msorenss79/hailo-frigate-h10`
+- Tags: `latest`
+- Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
+
+Pull it with:
+
+```bash
+docker pull msorenss79/hailo-frigate-h10:latest
+```
+
+If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file.
+
 ## Quick Start
 
 1. Prepare the Pi host with Raspberry Pi OS Trixie 64-bit and a working Hailo-10H driver/runtime. See [docs/host-setup.md](docs/host-setup.md).
