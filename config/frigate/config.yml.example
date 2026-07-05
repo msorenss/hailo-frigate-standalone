@@ -5,6 +5,9 @@ mqtt:
   user: <mqtt-user>
   password: <mqtt-password>
 
+ui:
+  time_format: 24hour
+
 detectors:
   hailo10h:
     type: hailo10h
