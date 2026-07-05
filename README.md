@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.17.1 with separate `hailo8l` and `hailo10h` detector plugins.
+- Frigate 0.17.2 with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -34,8 +34,8 @@ This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian
 
 Verified locally:
 
-- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.17.1`.
-- Frigate reports `0.17.1-416a9b7` on `/api/version`.
+- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.17.2`.
+- Frigate reports a `0.17.2` version on `/api/version` after startup.
 - Frigate sees the Hailo-10H with `hailortcli fw-control identify`.
 - VLM starts on port `8099` and reports `hailo_available=true` and `hailo_device=true`.
 
@@ -46,16 +46,25 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `latest`
+- Tags: `0.17.2`, `latest`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
 
 Pull it with:
 
 ```bash
-docker pull msorenss79/hailo-frigate-h10:latest
+docker pull msorenss79/hailo-frigate-h10:0.17.2
 ```
 
-If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file.
+If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file. Prefer the versioned tag so Compose does not rely on mutable `latest` cache behavior:
+
+```yaml
+frigate:
+   image: msorenss79/hailo-frigate-h10:0.17.2
+   pull_policy: always
+   platform: linux/arm64
+```
+
+The published image is built for Raspberry Pi / ARM64 hosts with Hailo-10H hardware.
 
 ## Quick Start
 
