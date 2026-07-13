@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-13
+
+- Switched the Frigate Hailo-10H build defaults to `ghcr.io/blakeblackshear/frigate:0.18.0-beta1-standard-arm64` for beta testing.
+- Published Docker Hub tags `0.18.0-beta1` and `latest` for `msorenss79/hailo-frigate-h10`; both point at the same beta image digest.
+- Removed the 0.17-era `ui.time_format` example because Frigate 0.18 removes `ui.date_format` and `ui.time_format`.
+- Documented backing up Frigate config and database files before running the 0.18 beta migration.
+
 ## 2026-07-05
 
 - Updated the Frigate base image defaults and documentation from `0.17.1` to `0.17.2`.

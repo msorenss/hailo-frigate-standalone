@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.17.2 with separate `hailo8l` and `hailo10h` detector plugins.
+- Frigate 0.18.0-beta1 with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -34,10 +34,12 @@ This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian
 
 Verified locally:
 
-- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.17.2`.
-- Frigate reports a `0.17.2` version on `/api/version` after startup.
+- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.18.0-beta1-standard-arm64`.
+- Frigate reports a `0.18.0-beta1` version on `/api/version` after startup.
 - Frigate sees the Hailo-10H with `hailortcli fw-control identify`.
 - VLM starts on port `8099` and reports `hailo_available=true` and `hailo_device=true`.
+
+Frigate 0.18.0 is currently a beta. Back up `config/frigate/config.yml` and `frigate.db` before starting this image against an existing Frigate data directory so upstream config and database migrations can be rolled back if needed.
 
 The VLM service still needs a real camera source and a VLM HEF model before it can do useful image-language inference.
 
@@ -46,20 +48,22 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `0.17.2`, `latest`, `local`
+- Tags: `0.18.0-beta1`, `latest`, `0.17.2`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
+
+The `latest` tag currently points at the 0.18.0-beta1 image. Use the versioned tag if you want an explicit beta pin, or `0.17.2` if you need the previous Frigate release.
 
 Pull it with:
 
 ```bash
-docker pull msorenss79/hailo-frigate-h10:0.17.2
+docker pull msorenss79/hailo-frigate-h10:0.18.0-beta1
 ```
 
 If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file. Prefer the versioned tag so Compose does not rely on mutable `latest` cache behavior:
 
 ```yaml
 frigate:
-   image: msorenss79/hailo-frigate-h10:0.17.2
+   image: msorenss79/hailo-frigate-h10:0.18.0-beta1
    pull_policy: always
    platform: linux/arm64
 ```
