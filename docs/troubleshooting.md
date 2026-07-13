@@ -71,20 +71,13 @@ sudo docker compose --env-file .env -f compose.yaml up -d --force-recreate friga
 
 `docker compose restart` does not inject newly added environment variables into an existing container.
 
-## Frigate UI Shows `Invalid time`
+## Frigate 0.18 Config Migration Fails
 
-If the Review timeline or system status page shows `Invalid time` while API timestamps are valid, set Frigate to use 24-hour UI time formatting:
-
-```yaml
-ui:
-	time_format: 24hour
-```
-
-Frigate's frontend chooses its language from the browser locale. Swedish browsers can trigger broken 12-hour date format strings from translation files where the literal `kl.` is not escaped for `date-fns`. The 24-hour Swedish formats are valid and avoid the issue.
+Frigate 0.18 removes the old `ui.date_format` and `ui.time_format` config keys. If config migration fails on startup, remove those keys from `config/frigate/config.yml`, then recreate the container.
 
 ## Frigate Patch Fails During Build
 
-The patch has been re-tested against Frigate 0.17.2. If you change `FRIGATE_IMAGE` again, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
+The patch has been checked against Frigate 0.18.0-beta1. If you change `FRIGATE_IMAGE` again, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
 
 ## VLM Build Cannot Clone Upstream
 
