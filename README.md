@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.18.0-beta2 with separate `hailo8l` and `hailo10h` detector plugins.
+- Frigate 0.18.0-beta3 with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -34,16 +34,16 @@ This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian
 
 Verified locally:
 
-- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.18.0-beta2-standard-arm64`.
-- Frigate reports a `0.18.0-beta2` version on `/api/version` after startup.
+- Frigate image builds from `ghcr.io/blakeblackshear/frigate:0.18.0-beta3-standard-arm64`.
+- Frigate reports a `0.18.0-beta3` version on `/api/version` after startup.
 - Frigate sees the Hailo-10H with `hailortcli fw-control identify`.
 - VLM starts on port `8099` and reports `hailo_available=true` and `hailo_device=true`.
 
 Frigate 0.18.0 is currently a beta. Back up `config/frigate/config.yml` and `frigate.db` before starting this image against an existing Frigate data directory so upstream config and database migrations can be rolled back if needed.
 
-## Frigate 0.18.0 Beta 2 Upgrade Notes
+## Frigate 0.18.0 Beta 3 Upgrade Notes
 
-This image uses the upstream `v0.18.0-beta2` release. Beta 2 adds security fixes for database REGEXP evaluation and JWT expiry/logout handling, plus fixes for runtime camera toggles, ONVIF, autotracking, GenAI, semantic search, exports, and the Frigate UI.
+This image uses the upstream `v0.18.0-beta3` release. Beta 3 adds security fixes for auth listener validation, motion-search camera authorization, and a regular-expression denial-of-service issue. It also fixes runtime/profile persistence, ONVIF PTZ behavior, motion-search filters, and several Frigate UI issues.
 
 The 0.18 upgrade still includes breaking changes that may require attention after the automatic configuration migration:
 
@@ -53,7 +53,7 @@ The 0.18 upgrade still includes breaking changes that may require attention afte
 - The `genai` configuration supports multiple providers and roles.
 - `sync_recordings`, `timelapse_args`, `ui.date_format`, and `ui.time_format` have been removed.
 
-Review the upstream [Frigate 0.18.0 Beta 2 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.0-beta2) and take a backup before upgrading a production installation.
+Review the upstream [Frigate 0.18.0 Beta 3 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.0-beta3) and take a backup before upgrading a production installation.
 
 The VLM service still needs a real camera source and a VLM HEF model before it can do useful image-language inference.
 
@@ -62,22 +62,22 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `0.18.0-beta2`, `latest`, `0.18.0-beta1`, `0.17.2`, `local`
+- Tags: `0.18.0-beta3`, `latest`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
 
-The `latest` tag currently points at the 0.18.0-beta2 image. Use the versioned tag if you want an explicit beta pin, or `0.17.2` if you need the previous Frigate release.
+The `latest` tag currently points at the 0.18.0-beta3 image. Use the versioned tag if you want an explicit beta pin, or `0.17.2` if you need the previous Frigate release.
 
 Pull it with:
 
 ```bash
-docker pull msorenss79/hailo-frigate-h10:0.18.0-beta2
+docker pull msorenss79/hailo-frigate-h10:0.18.0-beta3
 ```
 
 If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file. Prefer the versioned tag so Compose does not rely on mutable `latest` cache behavior:
 
 ```yaml
 frigate:
-   image: msorenss79/hailo-frigate-h10:0.18.0-beta2
+   image: msorenss79/hailo-frigate-h10:0.18.0-beta3
    pull_policy: always
    platform: linux/arm64
 ```

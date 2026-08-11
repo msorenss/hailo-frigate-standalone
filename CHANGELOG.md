@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-11
+
+- Updated the Frigate Hailo-10H build defaults to `ghcr.io/blakeblackshear/frigate:0.18.0-beta3-standard-arm64`.
+- Published Docker Hub tags `0.18.0-beta3` and `latest` for `msorenss79/hailo-frigate-h10`.
+
 ## 2026-08-06
 
 - Updated the Frigate Hailo-10H build defaults to `ghcr.io/blakeblackshear/frigate:0.18.0-beta2-standard-arm64`.
