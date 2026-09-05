@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-05
+
+- Updated Frigate Hailo-10H build defaults and upgrade documentation to `0.18.0-rc1-standard-arm64`.
+- Docker Hub release tags: `0.18.0-rc1` and `latest` for `msorenss79/hailo-frigate-h10`.
+
 ## 2026-08-11
 
 - Updated the Frigate Hailo-10H build defaults to `ghcr.io/blakeblackshear/frigate:0.18.0-beta3-standard-arm64`.
