@@ -1,8 +1,8 @@
 # Frigate Hailo-10H Service
 
-The Frigate service builds from [services/frigate-h10/Dockerfile](../services/frigate-h10/Dockerfile). It starts from `ghcr.io/blakeblackshear/frigate:0.18.0-rc1-standard-arm64`, replaces the bundled HailoRT runtime with HailoRT 5.3.0, and applies [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py).
+The Frigate service builds from [services/frigate-h10/Dockerfile](../services/frigate-h10/Dockerfile). It starts from `ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64`, replaces the bundled HailoRT runtime with HailoRT 5.3.0, and applies [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py).
 
-Frigate 0.18.0 is currently a release candidate with upstream config and database migrations. Back up `config/frigate/config.yml` and `frigate.db` before starting it against existing media/config volumes.
+Frigate 0.18.0 is a stable release with upstream config and database migrations. Back up `config/frigate/config.yml` and `frigate.db` before starting it against existing media/config volumes. For existing installations, update `FRIGATE_IMAGE` in your local `.env` to `ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64` before rebuilding; `.env` overrides the Compose default.
 
 ## Detector Configuration
 
@@ -51,6 +51,10 @@ mqtt:
 ```
 
 If your broker runs as the Mosquitto add-on in Home Assistant, use the Home Assistant host IP and the MQTT credentials configured there.
+
+## OpenRouter GenAI
+
+Frigate's existing OpenAI-compatible provider can use OpenRouter without an image patch. See [docs/openrouter.md](openrouter.md) for API-key setup, model requirements, configuration, and validation.
 
 ## Ports
 

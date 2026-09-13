@@ -20,6 +20,20 @@ model:
   labelmap_path: /labelmap/coco-80.txt
   path: https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v5.3.0/hailo10h/yolov8m.hef
 
+# OpenRouter uses Frigate's OpenAI-compatible provider. This example remains
+# disabled until it is uncommented and FRIGATE_OPENROUTER_API_KEY is set.
+# genai:
+#   openrouter:
+#     provider: openai
+#     base_url: https://openrouter.ai/api/v1
+#     api_key: "{FRIGATE_OPENROUTER_API_KEY}"
+#     model: google/gemini-2.5-flash
+#     roles:
+#       - descriptions
+#       - chat
+#     runtime_options:
+#       max_tokens: 300
+
 cameras:
   camera_1:
     enabled: true
@@ -39,6 +53,13 @@ objects:
   track:
     - person
     - car
+  # Uncomment after enabling the OpenRouter provider above. Each generated
+  # description sends camera images to the selected external model.
+  # genai:
+  #   enabled: true
+  #   objects:
+  #     - person
+  #     - car
 
 record:
   enabled: true

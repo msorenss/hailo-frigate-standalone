@@ -77,7 +77,7 @@ Frigate 0.18 removes the old `ui.date_format` and `ui.time_format` config keys. 
 
 ## Frigate Patch Fails During Build
 
-The patch has been checked against Frigate 0.18.0-rc1. If you change `FRIGATE_IMAGE` again, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
+The patch targets Frigate 0.18.0. If you change `FRIGATE_IMAGE` again, the target detector plugin may have changed and the patch can fail intentionally. Re-test and update [services/frigate-h10/hailo10h_patch.py](../services/frigate-h10/hailo10h_patch.py) before upgrading Frigate.
 
 ## VLM Build Cannot Clone Upstream
 
