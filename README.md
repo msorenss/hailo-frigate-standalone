@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.18.0-rc1 with separate `hailo8l` and `hailo10h` detector plugins.
+- Frigate 0.18.0 stable with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -32,21 +32,25 @@ The image now exposes both `hailo8l` and `hailo10h` detector types. Use `hailo10
 
 This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian/Raspberry Pi OS Trixie with HailoRT 5.3.0 and a Hailo-10H device exposed as `/dev/h1x-0`.
 
-Verified for RC1 in temporary containers:
+Verified for 0.18.0 in the local Frigate build:
 
-- ARM64 image builds from `ghcr.io/blakeblackshear/frigate:0.18.0-rc1-standard-arm64` and the detector patch applies successfully.
-- Frigate reports internal version `0.18.0-a745070`, matching the upstream RC1 commit.
-- Both detector plugins import successfully; the installed Python HailoRT package is `5.3.0`.
-- The example configuration passes Frigate's configuration model validation.
-- `hailortcli fw-control identify` detects HAILO10H with firmware `5.3.0`.
+- ARM64 image builds from `ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64` and reports Frigate `0.18.0-77a66e7`.
+- Both detector plugins import and register successfully.
+- The installed Python HailoRT package is `5.3.0`.
+- HailoRT CLI `5.3.0` identifies the host accelerator as `HAILO10H`, with firmware `5.3.0`.
+- The example configuration migrates to `0.18-0` and passes Frigate validation.
+- Docker Compose configuration validation passes.
+- An isolated startup test with no cameras reaches Docker `healthy` status and serves `0.18.0-77a66e7` from `/api/version`.
 
-Camera inference and simultaneous Frigate/VLM operation were not re-tested for RC1. The earlier VLM smoke test reported `hailo_available=true` and `hailo_device=true` on port `8099`.
+The VLM image is unchanged and was not rebuilt for this release.
 
-Frigate 0.18.0 is currently a release candidate. Back up `config/frigate/config.yml` and `frigate.db` before starting this image against an existing Frigate data directory so upstream config and database migrations can be rolled back if needed.
+Camera inference and simultaneous Frigate/VLM operation were not re-tested for 0.18.0. The earlier VLM smoke test reported `hailo_available=true` and `hailo_device=true` on port `8099`.
 
-## Frigate 0.18.0 RC1 Upgrade Notes
+Back up `config/frigate/config.yml` and `frigate.db` before starting this image against an existing Frigate data directory so upstream config and database migrations can be rolled back if needed.
 
-This image uses the upstream `v0.18.0-rc1` release. RC1 adds path sanitization, camera-access restrictions for review summaries, webpush endpoint validation, and password-change rate limiting. It also fixes GenAI description activation, notification state, LPR event filtering, and export/UI issues.
+## Frigate 0.18.0 Upgrade Notes
+
+This image uses the upstream stable `v0.18.0` release. For an existing local build, update `FRIGATE_IMAGE` in `.env` to `ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64` before rebuilding; `.env` overrides the Compose default.
 
 The 0.18 upgrade still includes breaking changes that may require attention after the automatic configuration migration:
 
@@ -56,7 +60,7 @@ The 0.18 upgrade still includes breaking changes that may require attention afte
 - The `genai` configuration supports multiple providers and roles.
 - `sync_recordings`, `timelapse_args`, `ui.date_format`, and `ui.time_format` have been removed.
 
-Review the upstream [Frigate 0.18.0 RC1 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.0-rc1) and take a backup before upgrading a production installation.
+Review the upstream [Frigate 0.18.0 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.0) and take a backup before upgrading a production installation.
 
 The VLM service still needs a real camera source and a VLM HEF model before it can do useful image-language inference.
 
@@ -65,22 +69,22 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `0.18.0-rc1`, `latest`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
+- Tags: `0.18.0`, `latest`, `0.18.0-rc2`, `0.18.0-rc1`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
 
-The `latest` tag currently points at the 0.18.0-rc1 image. Use the versioned tag if you want an explicit release-candidate pin, or `0.17.2` if you need the previous Frigate release.
+The `latest` tag points at the stable 0.18.0 image. Use the versioned tag to pin this release, or `0.17.2` if you need the previous stable Frigate release.
 
 Pull it with:
 
 ```bash
-docker pull msorenss79/hailo-frigate-h10:0.18.0-rc1
+docker pull msorenss79/hailo-frigate-h10:0.18.0
 ```
 
 If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file. Prefer the versioned tag so Compose does not rely on mutable `latest` cache behavior:
 
 ```yaml
 frigate:
-   image: msorenss79/hailo-frigate-h10:0.18.0-rc1
+   image: msorenss79/hailo-frigate-h10:0.18.0
    pull_policy: always
    platform: linux/arm64
 ```

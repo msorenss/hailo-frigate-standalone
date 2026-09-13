@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-13
+
+- Updated Frigate Hailo-10H build defaults to the stable `0.18.0-standard-arm64` release, keeping HailoRT 5.3.0.
+- Updated upgrade documentation and Docker Hub release references to `0.18.0` and `latest` for `msorenss79/hailo-frigate-h10`.
+- Corrected the image source label to this repository and added the `0.18.0` version label.
+
+## 2026-09-07
+
+- Updated Frigate Hailo-10H build defaults and upgrade documentation to `0.18.0-rc2-standard-arm64`.
+- Prepared the Docker Hub release tag `0.18.0-rc2` and `latest` for `msorenss79/hailo-frigate-h10`.
+
 ## 2026-09-05
 
 - Updated Frigate Hailo-10H build defaults and upgrade documentation to `0.18.0-rc1-standard-arm64`.
