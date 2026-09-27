@@ -8,9 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ARG VLM_REPO=https://github.com/mikehailodev/hailo-vlm-addon.git
 ARG VLM_REF=main
-ARG HAILORT_VERSION=5.3.0
-ARG HAILORT_DEB=hailort_5.3.0_arm64.deb
-ARG HAILORT_WHEEL=hailort-5.3.0-cp313-cp313-linux_aarch64.whl
+ARG HAILORT_VERSION=5.4.0
+ARG HAILORT_DEB=hailort_5.4.0_arm64.deb
+ARG HAILORT_WHEEL=hailort-5.4.0-cp313-cp313-linux_aarch64.whl
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates \

@@ -1,5 +1,12 @@
 # Changelog
 
+## HailoRT 5.4.0 — 2026-09-27
+
+- Updated runtime and Python wheel defaults to 5.4.0 for Frigate and VLM builds.
+- Published ARM64 Frigate 0.18.0 with HailoRT 5.4.0 as `0.18.0-hailort5.4.0`, `0.18.0`, and `latest` on Docker Hub.
+- Verified host driver and firmware 5.4.0, Frigate health, and live camera inference. VLM was not rebuilt or tested for this runtime update.
+- Documented the matching host driver/firmware requirement and reboot after upgrading.
+
 ## 2026-09-13
 
 - Updated Frigate Hailo-10H build defaults to the stable `0.18.0-standard-arm64` release, keeping HailoRT 5.3.0.

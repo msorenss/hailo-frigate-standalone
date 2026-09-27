@@ -5,9 +5,9 @@ ARG FRIGATE_IMAGE=ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64
 FROM ${FRIGATE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG HAILORT_VERSION=5.3.0
-ARG HAILORT_DEB=hailort_5.3.0_arm64.deb
-ARG HAILORT_WHEEL=hailort-5.3.0-cp311-cp311-linux_aarch64.whl
+ARG HAILORT_VERSION=5.4.0
+ARG HAILORT_DEB=hailort_5.4.0_arm64.deb
+ARG HAILORT_WHEEL=hailort-5.4.0-cp311-cp311-linux_aarch64.whl
 
 # Required local files:
 # - packages/${HAILORT_DEB}
@@ -32,6 +32,6 @@ COPY hailo10h_patch.py /tmp/hailo10h_patch.py
 RUN python3 /tmp/hailo10h_patch.py && rm /tmp/hailo10h_patch.py
 
 LABEL org.opencontainers.image.title="Standalone Frigate Hailo-10H" \
-    org.opencontainers.image.description="Frigate 0.18.0 with HailoRT 5.3.0 and Hailo-10H detector patch" \
+    org.opencontainers.image.description="Frigate 0.18.0 with HailoRT ${HAILORT_VERSION} and Hailo-10H detector patch" \
     org.opencontainers.image.version="0.18.0" \
     org.opencontainers.image.source="https://github.com/msorenss/hailo-frigate-standalone"

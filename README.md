@@ -30,6 +30,10 @@ The image now exposes both `hailo8l` and `hailo10h` detector types. Use `hailo10
 
 ## Current Tested State
 
+The local installation was upgraded to HailoRT 5.4.0 on 2026-09-27. The host runtime, PCIe driver and Hailo-10H firmware report 5.4.0. Frigate is healthy and camera inference was verified with the 5.4.0 container. A reboot was required to load the new device firmware. Hosts must upgrade the PCIe driver and firmware to 5.4.0 before using this image.
+
+The following records the earlier 5.3.0 release validation.
+
 This scaffold has been built and smoke-tested on a Raspberry Pi 5 running Debian/Raspberry Pi OS Trixie with HailoRT 5.3.0 and a Hailo-10H device exposed as `/dev/h1x-0`.
 
 Verified for 0.18.0 in the local Frigate build:
@@ -69,10 +73,10 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `0.18.0`, `latest`, `0.18.0-rc2`, `0.18.0-rc1`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
+- Tags: `0.18.0-hailort5.4.0`, `0.18.0`, `latest`, `0.18.0-rc2`, `0.18.0-rc1`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
 
-The `latest` tag points at the stable 0.18.0 image. Use the versioned tag to pin this release, or `0.17.2` if you need the previous stable Frigate release.
+The `latest` and `0.18.0` tags use HailoRT 5.4.0. The `0.18.0-hailort5.4.0` tag explicitly pins this runtime release. These images require a host PCIe driver and device firmware at 5.4.0. Use the versioned tag to pin this release, or `0.17.2` if you need the previous stable Frigate release.
 
 Pull it with:
 
@@ -103,8 +107,8 @@ cp config/vlm/options.json.example config/vlm/options.json
 ```
 
 3. Place the required HailoRT package files in the service package directories:
-   - `services/frigate-h10/packages/`: `hailort_5.3.0_arm64.deb` and `hailort-5.3.0-cp311-cp311-linux_aarch64.whl`
-   - `services/hailo-vlm/packages/`: `hailort_5.3.0_arm64.deb` and `hailort-5.3.0-cp313-cp313-linux_aarch64.whl`
+   - `services/frigate-h10/packages/`: `hailort_5.4.0_arm64.deb` and `hailort-5.4.0-cp311-cp311-linux_aarch64.whl`
+   - `services/hailo-vlm/packages/`: `hailort_5.4.0_arm64.deb` and `hailort-5.4.0-cp313-cp313-linux_aarch64.whl`
 4. Adjust `.env`, `config/frigate/config.yml`, and `config/vlm/options.json`. These local files are ignored by git. Put camera credentials only in `.env`.
 5. Place a Hailo-10H VLM HEF model, for example `Qwen2-VL-2B-Instruct.hef`, in `models/vlm/`. See [docs/vlm.md](docs/vlm.md).
 6. Run the checks:
@@ -220,22 +224,22 @@ The patch does three concrete things:
 - It generates a sibling `hailo10h` detector plugin that registers as its own Frigate detector type.
 - It sets `params.group_id = "SHARED"` in both Hailo detector plugins so Frigate and VLM can use the accelerator at the same time.
 
-The Frigate image also removes the old `/usr/local/bin/hailortcli` from the upstream base image and links it to the HailoRT 5.3.0 CLI installed from the local `.deb`. Verify with:
+The Frigate image also removes the old `/usr/local/bin/hailortcli` from the upstream base image and links it to the HailoRT 5.4.0 CLI installed from the local `.deb`. Verify with:
 
 ```bash
 sudo docker exec frigate-h10 sh -c 'hailortcli --version && hailortcli fw-control identify'
 ```
 
-Expected output includes `HailoRT-CLI version 5.3.0` and `Device Architecture: HAILO10H`.
+Expected output includes `HailoRT-CLI version 5.4.0` and `Device Architecture: HAILO10H`.
 
 ## Required HailoRT Packages
 
 The Dockerfiles expect these files across the two service package directories:
 
 ```text
-hailort_5.3.0_arm64.deb
-hailort-5.3.0-cp311-cp311-linux_aarch64.whl
-hailort-5.3.0-cp313-cp313-linux_aarch64.whl
+hailort_5.4.0_arm64.deb
+hailort-5.4.0-cp311-cp311-linux_aarch64.whl
+hailort-5.4.0-cp313-cp313-linux_aarch64.whl
 ```
 
 They are not committed here. Copy the `.deb` into both service package folders, the `cp311` wheel into the Frigate package folder, and the `cp313` wheel into the VLM package folder. This keeps the repo small and avoids bundling licensed binary artifacts.
@@ -243,7 +247,7 @@ They are not committed here. Copy the `.deb` into both service package folders, 
 ## Important Files
 
 - [compose.yaml](compose.yaml) - Docker Compose deployment for both services.
-- [services/frigate-h10/Dockerfile](services/frigate-h10/Dockerfile) - Frigate image with HailoRT 5.3.0 package replacement.
+- [services/frigate-h10/Dockerfile](services/frigate-h10/Dockerfile) - Frigate image with HailoRT 5.4.0 package replacement.
 - [services/frigate-h10/hailo10h_patch.py](services/frigate-h10/hailo10h_patch.py) - Build-time patch script that preserves `hailo8l`, creates `hailo10h`, and enables shared Hailo access.
 - [services/hailo-vlm/Dockerfile](services/hailo-vlm/Dockerfile) - VLM image that pulls the upstream app files at build time.
 - [config/frigate/config.yml.example](config/frigate/config.yml.example) - Frigate config template.

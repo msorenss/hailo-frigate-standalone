@@ -27,6 +27,10 @@ The community forum notes that newer Hailo Raspberry Pi support is Trixie-focuse
 
 ## Verify Hailo Device
 
+The current images require HailoRT, the host PCIe driver, and Hailo-10H device firmware at 5.4.0. Install the matching runtime and PCIe driver before starting containers. The driver file is `hailort-pcie-driver_5.4.0_all.deb`; its installed Debian package name is `h10-hailort-pcie-driver`.
+
+After upgrading from 5.3.0, reboot to load the new device firmware. Reloading `hailo1x_pci` alone left the old firmware running in the tested installation and caused `HAILO_SOC_CONNECT` to fail with a driver version mismatch. If a reboot leaves the old firmware running, shut down and briefly disconnect power before restarting.
+
 Before starting containers, verify the host sees the accelerator:
 
 ```bash
@@ -41,25 +45,25 @@ This repo also includes a helper:
 make check-host
 ```
 
-On this Raspberry Pi OS Trixie / HailoRT 5.3.0 setup, the host device node is `/dev/h1x-0`. [compose.yaml](../compose.yaml) maps it into containers both as `/dev/h1x-0` and as `/dev/hailo0` because the upstream add-on code still checks `/dev/hailo0`.
+On this Raspberry Pi OS Trixie / HailoRT 5.4.0 setup, the host device node is `/dev/h1x-0`. [compose.yaml](../compose.yaml) maps it into containers both as `/dev/h1x-0` and as `/dev/hailo0` because the upstream add-on code still checks `/dev/hailo0`.
 
 ## HailoRT Package Files
 
 The images expect these package files in their local `packages` directories:
 
 ```text
-hailort_5.3.0_arm64.deb
-hailort-5.3.0-cp311-cp311-linux_aarch64.whl
-hailort-5.3.0-cp313-cp313-linux_aarch64.whl
+hailort_5.4.0_arm64.deb
+hailort-5.4.0-cp311-cp311-linux_aarch64.whl
+hailort-5.4.0-cp313-cp313-linux_aarch64.whl
 ```
 
 Copy them to:
 
 ```text
-services/frigate-h10/packages/hailort_5.3.0_arm64.deb
-services/frigate-h10/packages/hailort-5.3.0-cp311-cp311-linux_aarch64.whl
-services/hailo-vlm/packages/hailort_5.3.0_arm64.deb
-services/hailo-vlm/packages/hailort-5.3.0-cp313-cp313-linux_aarch64.whl
+services/frigate-h10/packages/hailort_5.4.0_arm64.deb
+services/frigate-h10/packages/hailort-5.4.0-cp311-cp311-linux_aarch64.whl
+services/hailo-vlm/packages/hailort_5.4.0_arm64.deb
+services/hailo-vlm/packages/hailort-5.4.0-cp313-cp313-linux_aarch64.whl
 ```
 
 Then run:
@@ -68,7 +72,7 @@ Then run:
 make check-packages
 ```
 
-The default scaffold version is controlled by `HAILORT_VERSION=5.3.0` in `.env.example` and `.env`.
+The default scaffold version is controlled by `HAILORT_VERSION=5.4.0` in `.env.example` and `.env`.
 
 ## Docker Permissions
 
@@ -78,7 +82,7 @@ If a container logs `EPERM` or cannot open `/dev/hailo0`:
 
 1. Confirm the device exists on the host.
 2. Confirm the host user can run Docker.
-3. Confirm `.env` has `HAILO_DEVICE=/dev/h1x-0` for HailoRT 5.3.0 on Trixie.
+3. Confirm `.env` has `HAILO_DEVICE=/dev/h1x-0` for HailoRT 5.4.0 on Trixie.
 4. Add `/dev/hailo_control` mapping if your driver exposes it.
 5. As a temporary diagnostic only, test with `privileged: true` on the failing service.
 

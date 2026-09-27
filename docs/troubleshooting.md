@@ -10,7 +10,7 @@ ls -l /dev/h1x-0 /dev/hailo* 2>/dev/null
 hailortcli fw-control identify
 ```
 
-On this Trixie/HailoRT 5.3.0 host the real device node is `/dev/h1x-0`. The compose file maps that node into containers as `/dev/hailo0` for compatibility with the upstream add-on checks. If the host node is missing, fix the Pi OS driver/firmware installation before debugging Docker.
+On this Trixie/HailoRT 5.4.0 host the real device node is `/dev/h1x-0`. The compose file maps that node into containers as `/dev/hailo0` for compatibility with the upstream add-on checks. If the host node is missing, fix the Pi OS driver/firmware installation before debugging Docker.
 
 ## Container Cannot Open `/dev/hailo0`
 
@@ -36,9 +36,9 @@ make check-packages
 Both service build contexts need:
 
 ```text
-hailort_5.3.0_arm64.deb
-hailort-5.3.0-cp311-cp311-linux_aarch64.whl
-hailort-5.3.0-cp313-cp313-linux_aarch64.whl
+hailort_5.4.0_arm64.deb
+hailort-5.4.0-cp311-cp311-linux_aarch64.whl
+hailort-5.4.0-cp313-cp313-linux_aarch64.whl
 ```
 
 The files are ignored by git on purpose.
@@ -49,7 +49,7 @@ The expected HailoRT wheel is `cp311`, matching Python 3.11. If the base image c
 
 ## Frigate Uses Old HailoRT CLI
 
-The upstream Frigate image includes `/usr/local/bin/hailortcli` from HailoRT 4.x, and `/usr/local/bin` appears before `/usr/bin` in `PATH`. The Frigate Dockerfile removes that stale binary and symlinks `/usr/local/bin/hailortcli` to the HailoRT 5.3.0 CLI installed by the `.deb` package.
+The upstream Frigate image includes `/usr/local/bin/hailortcli` from HailoRT 4.x, and `/usr/local/bin` appears before `/usr/bin` in `PATH`. The Frigate Dockerfile removes that stale binary and symlinks `/usr/local/bin/hailortcli` to the HailoRT 5.4.0 CLI installed by the `.deb` package.
 
 Verify the rebuilt image with:
 
@@ -57,7 +57,7 @@ Verify the rebuilt image with:
 sudo docker exec frigate-h10 sh -c 'hailortcli --version && hailortcli fw-control identify'
 ```
 
-Expected version is `5.3.0` and expected architecture is `HAILO10H`.
+Expected version is `5.4.0` and expected architecture is `HAILO10H`.
 
 ## Frigate API Returns 500 During Startup
 
