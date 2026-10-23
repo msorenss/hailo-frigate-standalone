@@ -1,5 +1,11 @@
 # Changelog
 
+## Frigate 0.18.2 — 2026-10-18
+
+- Updated Frigate Hailo-10H base image defaults and documentation to `ghcr.io/blakeblackshear/frigate:0.18.2-standard-arm64` with HailoRT 5.4.0.
+- Built local image `hailo-frigate-h10:0.18.2` and updated `current/compose.override.yaml`.
+- Release checks on 2026-10-23 verified Frigate `0.18.2-cfa08c5`, HailoRT `5.4.0`, ARM64 architecture, and imports of both detector plugins. Camera inference was not re-tested; the active local container remains on 0.18.0.
+
 ## HailoRT 5.4.0 — 2026-09-27
 
 - Updated runtime and Python wheel defaults to 5.4.0 for Frigate and VLM builds.

@@ -2,7 +2,7 @@
 
 This repo is a standalone Docker Compose scaffold for running these workloads on a Raspberry Pi 5 with a Hailo-10H AI accelerator:
 
-- Frigate 0.18.0 stable with separate `hailo8l` and `hailo10h` detector plugins.
+- Frigate 0.18.2 stable with separate `hailo8l` and `hailo10h` detector plugins.
 - Hailo VLM Chat as a separate web/API service.
 - MQTT integration back to Home Assistant running on another machine.
 
@@ -30,7 +30,9 @@ The image now exposes both `hailo8l` and `hailo10h` detector types. Use `hailo10
 
 ## Current Tested State
 
-The local installation was upgraded to HailoRT 5.4.0 on 2026-09-27. The host runtime, PCIe driver and Hailo-10H firmware report 5.4.0. Frigate is healthy and camera inference was verified with the 5.4.0 container. A reboot was required to load the new device firmware. Hosts must upgrade the PCIe driver and firmware to 5.4.0 before using this image.
+The Frigate 0.18.2 ARM64 image was verified on 2026-10-23: it reports `0.18.2-cfa08c5`, includes HailoRT `5.4.0`, and successfully imports both detector plugins. Camera inference and simultaneous Frigate/VLM operation were not re-tested for 0.18.2. The active local container still runs Frigate 0.18.0; publishing this release does not upgrade it.
+
+The local installation was upgraded to HailoRT 5.4.0 on 2026-09-27. The host runtime, PCIe driver and Hailo-10H firmware report 5.4.0. Camera inference was verified with the earlier 5.4.0 container. A reboot was required to load the new device firmware. Hosts must upgrade the PCIe driver and firmware to 5.4.0 before using this image.
 
 The following records the earlier 5.3.0 release validation.
 
@@ -52,9 +54,9 @@ Camera inference and simultaneous Frigate/VLM operation were not re-tested for 0
 
 Back up `config/frigate/config.yml` and `frigate.db` before starting this image against an existing Frigate data directory so upstream config and database migrations can be rolled back if needed.
 
-## Frigate 0.18.0 Upgrade Notes
+## Frigate 0.18.2 Upgrade Notes
 
-This image uses the upstream stable `v0.18.0` release. For an existing local build, update `FRIGATE_IMAGE` in `.env` to `ghcr.io/blakeblackshear/frigate:0.18.0-standard-arm64` before rebuilding; `.env` overrides the Compose default.
+This image uses the upstream stable `v0.18.2` release. For an existing local build, update `FRIGATE_IMAGE` in `.env` to `ghcr.io/blakeblackshear/frigate:0.18.2-standard-arm64` before rebuilding; `.env` overrides the Compose default.
 
 The 0.18 upgrade still includes breaking changes that may require attention after the automatic configuration migration:
 
@@ -64,7 +66,7 @@ The 0.18 upgrade still includes breaking changes that may require attention afte
 - The `genai` configuration supports multiple providers and roles.
 - `sync_recordings`, `timelapse_args`, `ui.date_format`, and `ui.time_format` have been removed.
 
-Review the upstream [Frigate 0.18.0 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.0) and take a backup before upgrading a production installation.
+Review the upstream [Frigate 0.18.2 release notes](https://github.com/blakeblackshear/frigate/releases/tag/v0.18.2) and take a backup before upgrading a production installation.
 
 The VLM service still needs a real camera source and a VLM HEF model before it can do useful image-language inference.
 
@@ -73,22 +75,22 @@ The VLM service still needs a real camera source and a VLM HEF model before it c
 A prebuilt Frigate image from this repo is published on Docker Hub:
 
 - Repository: `msorenss79/hailo-frigate-h10`
-- Tags: `0.18.0-hailort5.4.0`, `0.18.0`, `latest`, `0.18.0-rc2`, `0.18.0-rc1`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
+- Tags: `0.18.2`, `0.18.0-hailort5.4.0`, `0.18.0`, `latest`, `0.18.0-rc2`, `0.18.0-rc1`, `0.18.0-beta3`, `0.18.0-beta2`, `0.18.0-beta1`, `0.17.2`, `local`
 - Link: https://hub.docker.com/r/msorenss79/hailo-frigate-h10
 
-The `latest` and `0.18.0` tags use HailoRT 5.4.0. The `0.18.0-hailort5.4.0` tag explicitly pins this runtime release. These images require a host PCIe driver and device firmware at 5.4.0. Use the versioned tag to pin this release, or `0.17.2` if you need the previous stable Frigate release.
+The `latest`, `0.18.2`, and `0.18.0` tags use HailoRT 5.4.0. These images require a host PCIe driver and device firmware at 5.4.0. Use the versioned tag to pin this release, or `0.17.2` if you need the previous stable Frigate release.
 
 Pull it with:
 
 ```bash
-docker pull msorenss79/hailo-frigate-h10:0.18.0
+docker pull msorenss79/hailo-frigate-h10:0.18.2
 ```
 
 If you use the published image instead of a local build, update the Frigate service image reference accordingly in your Compose file. Prefer the versioned tag so Compose does not rely on mutable `latest` cache behavior:
 
 ```yaml
 frigate:
-   image: msorenss79/hailo-frigate-h10:0.18.0
+   image: msorenss79/hailo-frigate-h10:0.18.2
    pull_policy: always
    platform: linux/arm64
 ```
